@@ -131,6 +131,7 @@ export class UserManagerSettingsStore extends OidcClientSettingsStore {
     public readonly userStore: WebStorageStateStore;
 
     public constructor(args: UserManagerSettings) {
+        console.log("Args", args);
         const {
             popup_redirect_uri = args.redirect_uri,
             popup_post_logout_redirect_uri = args.post_logout_redirect_uri,
@@ -144,8 +145,8 @@ export class UserManagerSettingsStore extends OidcClientSettingsStore {
 
             silent_redirect_uri = args.redirect_uri,
             silentRequestTimeoutInSeconds = DefaultSilentRequestTimeoutInSeconds,
-            iframeHidden = false,
-            parentElementId = undefined,
+            iframeHidden = args.iframeHidden,
+            parentElementId = args.parentElementId,
             automaticSilentRenew = true,
             validateSubOnSilentRenew = true,
             includeIdTokenInSilentRenew = false,

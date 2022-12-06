@@ -37,21 +37,21 @@ import type { SigninResponse } from "./SigninResponse";
  * @public
  */
 export type ExtraSigninRequestArgs = Pick<
-    CreateSigninRequestArgs,
-    | "nonce"
-    | "extraQueryParams"
-    | "extraTokenParams"
-    | "state"
-    | "redirect_uri"
-    | "prompt"
-    | "acr_values"
+CreateSigninRequestArgs,
+| "nonce"
+| "extraQueryParams"
+| "extraTokenParams"
+| "state"
+| "redirect_uri"
+| "prompt"
+| "acr_values"
 >;
 /**
  * @public
  */
 export type ExtraSignoutRequestArgs = Pick<
-    CreateSignoutRequestArgs,
-    "extraQueryParams" | "state" | "id_token_hint" | "post_logout_redirect_uri"
+CreateSignoutRequestArgs,
+"extraQueryParams" | "state" | "id_token_hint" | "post_logout_redirect_uri"
 >;
 
 /**
@@ -84,7 +84,7 @@ export type SigninResourceOwnerCredentialsArgs =
  * @public
  */
 export type QuerySessionStatusArgs = IFrameWindowParams &
-    ExtraSigninRequestArgs;
+ExtraSigninRequestArgs;
 
 /**
  * @public
@@ -126,14 +126,10 @@ export class UserManager {
     protected readonly _silentRenewService: SilentRenewService;
     protected readonly _sessionMonitor: SessionMonitor | null;
 
-    public constructor(settings?: UserManagerSettings) {
-        this.settings = settings
-            ? new UserManagerSettingsStore(settings)
-            : new UserManagerSettingsStore(window.OIDCSettings);
+    public constructor() {
+        this.settings = new UserManagerSettingsStore(window.OIDCSettings);
 
-        this._client = settings
-            ? new OidcClient(settings)
-            : new OidcClient(window.OIDCSettings);
+        this._client = new OidcClient(window.OIDCSettings);
 
         this._redirectNavigator = new RedirectNavigator(this.settings);
         this._popupNavigator = new PopupNavigator(this.settings);
@@ -203,7 +199,7 @@ export class UserManager {
                 request_type: "si:r",
                 ...requestArgs,
             },
-            handle
+            handle,
         );
     }
 
@@ -211,7 +207,7 @@ export class UserManager {
      * Returns promise to process response from the authorization endpoint. The result of the promise is the authenticated `User`.
      */
     public async signinRedirectCallback(
-        url = window.location.href
+        url = window.location.href,
     ): Promise<User> {
         const logger = this._logger.create("signinRedirectCallback");
         const user = await this._signinEnd(url);
@@ -275,7 +271,7 @@ export class UserManager {
                 display: "popup",
                 ...requestArgs,
             },
-            handle
+            handle,
         );
         if (user) {
             if (user.profile && user.profile.sub) {
@@ -292,7 +288,7 @@ export class UserManager {
      */
     public async signinPopupCallback(
         url = window.location.href,
-        keepOpen = false
+        keepOpen = false,
     ): Promise<void> {
         const logger = this._logger.create("signinPopupCallback");
         await this._popupNavigator.callback(url, keepOpen);
@@ -304,7 +300,7 @@ export class UserManager {
      * The result of the promise is the authenticated `User`.
      */
     public async signinSilent(
-        args: SigninSilentArgs = { hidden: false, parentId: undefined }
+        args: SigninSilentArgs = { hidden: false, parentId: undefined },
     ): Promise<User | null> {
         const logger = this._logger.create("signinSilent");
         const {
@@ -341,14 +337,14 @@ export class UserManager {
             {
                 request_type: "si:s",
                 redirect_uri: url,
-                prompt: "none",
+                display: "popup",
                 id_token_hint: this.settings.includeIdTokenInSilentRenew
                     ? user?.id_token
                     : undefined,
                 ...requestArgs,
             },
             handle,
-            verifySub
+            verifySub,
         );
         if (user) {
             if (user.profile?.sub) {
@@ -377,7 +373,7 @@ export class UserManager {
      * Returns promise to notify the parent window of response from the authorization endpoint.
      */
     public async signinSilentCallback(
-        url = window.location.href
+        url = window.location.href,
     ): Promise<void> {
         const logger = this._logger.create("signinSilentCallback");
         await this._iframeNavigator.callback(url);
@@ -385,7 +381,7 @@ export class UserManager {
     }
 
     public async signinCallback(
-        url = window.location.href
+        url = window.location.href,
     ): Promise<User | void> {
         const { state } = await this._client.readSigninResponseState(url);
         switch (state.request_type) {
@@ -402,7 +398,7 @@ export class UserManager {
 
     public async signoutCallback(
         url = window.location.href,
-        keepOpen = false
+        keepOpen = false,
     ): Promise<void> {
         const { state } = await this._client.readSignoutResponseState(url);
         if (!state) {
@@ -428,7 +424,7 @@ export class UserManager {
      * Returns promise to query OP for user's current signin status. Returns object with session_state and subject identifier.
      */
     public async querySessionStatus(
-        args: QuerySessionStatusArgs = { hidden: false, parentId: undefined }
+        args: QuerySessionStatusArgs = { hidden: false, parentId: undefined },
     ): Promise<SessionStatus | null> {
         const logger = this._logger.create("querySessionStatus");
         const {
@@ -461,11 +457,11 @@ export class UserManager {
                 skipUserInfo: true,
                 ...requestArgs,
             },
-            handle
+            handle,
         );
         try {
             const signinResponse = await this._client.processSigninResponse(
-                navResponse.url
+                navResponse.url,
             );
             logger.debug("got signin response");
 
@@ -504,14 +500,14 @@ export class UserManager {
     protected async _signin(
         args: CreateSigninRequestArgs,
         handle: IWindow,
-        verifySub?: string
+        verifySub?: string,
     ): Promise<User> {
         const navResponse = await this._signinStart(args, handle);
         return await this._signinEnd(navResponse.url, verifySub);
     }
     protected async _signinStart(
         args: CreateSigninRequestArgs,
-        handle: IWindow
+        handle: IWindow,
     ): Promise<NavigateResponse> {
         const logger = this._logger.create("_signinStart");
 
@@ -527,7 +523,7 @@ export class UserManager {
             });
         } catch (err) {
             logger.debug(
-                "error after preparing navigator, closing navigator window"
+                "error after preparing navigator, closing navigator window",
             );
             handle.close();
             throw err;
@@ -544,7 +540,7 @@ export class UserManager {
 
     protected async _buildUser(
         signinResponse: SigninResponse,
-        verifySub?: string
+        verifySub?: string,
     ) {
         const logger = this._logger.create("_buildUser");
         const user = new User(signinResponse);
@@ -552,7 +548,7 @@ export class UserManager {
             if (verifySub !== user.profile.sub) {
                 logger.debug(
                     "current user does not match user returned from signin. sub from signin:",
-                    user.profile.sub
+                    user.profile.sub,
                 );
                 throw new ErrorResponse({
                     ...signinResponse,
@@ -573,7 +569,7 @@ export class UserManager {
      * Returns promise to trigger a redirect of the current window to the end session endpoint.
      */
     public async signoutRedirect(
-        args: SignoutRedirectArgs = {}
+        args: SignoutRedirectArgs = {},
     ): Promise<void> {
         const logger = this._logger.create("signoutRedirect");
         const { redirectMethod, ...requestArgs } = args;
@@ -587,7 +583,7 @@ export class UserManager {
                     this.settings.post_logout_redirect_uri,
                 ...requestArgs,
             },
-            handle
+            handle,
         );
         logger.info("success");
     }
@@ -596,7 +592,7 @@ export class UserManager {
      * Returns promise to process response from the end session endpoint.
      */
     public async signoutRedirectCallback(
-        url = window.location.href
+        url = window.location.href,
     ): Promise<SignoutResponse> {
         const logger = this._logger.create("signoutRedirectCallback");
         const response = await this._signoutEnd(url);
@@ -628,7 +624,7 @@ export class UserManager {
                 state: url == null ? undefined : {},
                 ...requestArgs,
             },
-            handle
+            handle,
         );
         logger.info("success");
     }
@@ -638,7 +634,7 @@ export class UserManager {
      */
     public async signoutPopupCallback(
         url = window.location.href,
-        keepOpen = false
+        keepOpen = false,
     ): Promise<void> {
         const logger = this._logger.create("signoutPopupCallback");
         await this._popupNavigator.callback(url, keepOpen);
@@ -647,14 +643,14 @@ export class UserManager {
 
     protected async _signout(
         args: CreateSignoutRequestArgs,
-        handle: IWindow
+        handle: IWindow,
     ): Promise<SignoutResponse> {
         const navResponse = await this._signoutStart(args, handle);
         return await this._signoutEnd(navResponse.url);
     }
     protected async _signoutStart(
         args: CreateSignoutRequestArgs = {},
-        handle: IWindow
+        handle: IWindow,
     ): Promise<NavigateResponse> {
         const logger = this._logger.create("_signoutStart");
 
@@ -676,7 +672,7 @@ export class UserManager {
             logger.debug("user removed, creating signout request");
 
             const signoutRequest = await this._client.createSignoutRequest(
-                args
+                args,
             );
             logger.debug("got signout request");
 
@@ -686,7 +682,7 @@ export class UserManager {
             });
         } catch (err) {
             logger.debug(
-                "error after preparing navigator, closing navigator window"
+                "error after preparing navigator, closing navigator window",
             );
             handle.close();
             throw err;
@@ -704,7 +700,7 @@ export class UserManager {
      * Returns promise to trigger a silent request (via an iframe) to the end session endpoint.
      */
     public async signoutSilent(
-        args: SignoutSilentArgs = { hidden: false, parentId: undefined }
+        args: SignoutSilentArgs = { hidden: false, parentId: undefined },
     ): Promise<void> {
         const logger = this._logger.create("signoutSilent");
         const {
@@ -731,7 +727,7 @@ export class UserManager {
                 id_token_hint: id_token_hint,
                 ...requestArgs,
             },
-            handle
+            handle,
         );
 
         logger.info("success");
@@ -741,7 +737,7 @@ export class UserManager {
      * Returns promise to notify the parent window of response from the end session endpoint.
      */
     public async signoutSilentCallback(
-        url = window.location.href
+        url = window.location.href,
     ): Promise<void> {
         const logger = this._logger.create("signoutSilentCallback");
         await this._iframeNavigator.callback(url);
@@ -755,13 +751,13 @@ export class UserManager {
 
     protected async _revokeInternal(
         user: User | null,
-        types = this.settings.revokeTokenTypes
+        types = this.settings.revokeTokenTypes,
     ): Promise<void> {
         const logger = this._logger.create("_revokeInternal");
         if (!user) return;
 
         const typesPresent = types.filter(
-            (type) => typeof user[type] === "string"
+            (type) => typeof user[type] === "string",
         );
 
         if (!typesPresent.length) {
@@ -773,7 +769,7 @@ export class UserManager {
         for (const type of typesPresent) {
             await this._client.revokeToken(
                 user[type]!, // eslint-disable-line @typescript-eslint/no-non-null-assertion
-                type
+                type,
             );
             logger.info(`${type} revoked successfully`);
             if (type !== "access_token") {
@@ -808,7 +804,7 @@ export class UserManager {
     protected async _loadUser(): Promise<User | null> {
         const logger = this._logger.create("_loadUser");
         const storageString = await this.settings.userStore.get(
-            this._userStoreKey
+            this._userStoreKey,
         );
         if (storageString) {
             logger.debug("user storageString loaded");
@@ -826,7 +822,7 @@ export class UserManager {
             const storageString = user.toStorageString();
             await this.settings.userStore.set(
                 this._userStoreKey,
-                storageString
+                storageString,
             );
         } else {
             this._logger.debug("removing user");

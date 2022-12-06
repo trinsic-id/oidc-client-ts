@@ -1,47 +1,63 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>duendesoftware test against https://demo.duendesoftware.com/</title>
-        <link rel="stylesheet" href="../app.css">
-    </head>
-    <body>
-        <div>
-            <a href="../index.html">home</a>
-            <a href="./sample.html">clear url</a>
-        </div>
-        <div>
-            <button id="clearState">clear stale state</button>
-            <button id="getUser">get user</button>
-            <button id="removeUser">remove user</button>
-            <button id="querySessionStatus">query user status at token server</button>
-            <button id="revokeAccessToken">revoke access token</button>
-        </div>
-        <div>
-            <button id="startSigninMainWindow">start signin main window</button>
-            <button id="endSigninMainWindow">end signin main window</button>
-        </div>
-        <div>
-            <button id="iframeSignin">signin silent/renew access token</button>
-        </div>
-        <div>
-            <button id="startSignoutMainWindow">start signout main window</button>
-            <button id="endSignoutMainWindow">end signout main window</button>
-        </div>
-        <div>
-            <button id="popupSignin">signin with popup</button>
-            <button id="popupSignout">signout with popup</button>
-        </div>
+  <head>
+    <title>duendesoftware test against https://demo.duendesoftware.com/</title>
+    <link rel="stylesheet" href="../app.css" />
+    <script>
+      window.TrinsicSettings = {
+        authority: 'https://localhost:7266/',
+        client_id: 'okie-dokie',
+        redirect_uri: `${window.location.origin}/callback.html`,
+        silent_redirect_uri: `${window.location.origin}/callback.html`,
 
-        <pre id="out"></pre>
+        popup_redirect_uri: `${window.location.origin}/callback.html`,
+        post_logout_redirect_uri: `${window.location.origin}/`,
+        response_type: 'code',
+        scope: 'openid',
+        prompt: undefined,
+        extraQueryParams: {
+          'trinsic:ecosystem': 'hersh-test',
+          'trinsic:schema':
+            'https://dev-schema.trinsic.cloud/hersh-test/zbettertemplate',
+        },
+      }
+    </script>
+  </head>
+  <body>
+    <div>
+      <a href="../index.html">home</a>
+      <a href="./sample.html">clear url</a>
+    </div>
+    <div>
+      <button id="clearState">clear stale state</button>
+      <button id="getUser">get user</button>
+      <button id="removeUser">remove user</button>
+      <button id="querySessionStatus">query user status at token server</button>
+      <button id="revokeAccessToken">revoke access token</button>
+    </div>
+    <div>
+      <button id="startSigninMainWindow">start signin main window</button>
+      <button id="endSigninMainWindow">end signin main window</button>
+    </div>
+    <div>
+      <button id="iframeSignin">signin silent/renew access token</button>
+    </div>
+    <div>
+      <button id="startSignoutMainWindow">start signout main window</button>
+      <button id="endSignoutMainWindow">end signout main window</button>
+    </div>
+    <div>
+      <button id="popupSignin">signin with popup</button>
+      <button id="popupSignout">signout with popup</button>
+    </div>
 
+    <pre id="out"></pre>
 
-        <a href="./sample-callback.html">a</a>
-        <a href="./sample-popup-signin.html">a</a>
-        <a href="./sample-popup-signout.html">a</a>
-        <a href="./sample-silent.html">a</a>
+    <a href="./sample-callback.html">a</a>
+    <a href="./sample-popup-signin.html">a</a>
+    <a href="./sample-popup-signout.html">a</a>
+    <a href="./sample-silent.html">a</a>
 
-
-        <script type="module" src="./sample.js"></script>
-
-    </body>
+    <script type="module" src="./sample.js"></script>
+  </body>
 </html>

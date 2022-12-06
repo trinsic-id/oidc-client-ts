@@ -32,9 +32,7 @@ export class IFrameWindow extends AbstractChildWindow {
         super();
         this._timeoutInSeconds = silentRequestTimeoutInSeconds;
 
-        hidden
-            ? (this._frame = IFrameWindow.createHiddenIframe())
-            : (this._frame = IFrameWindow.createVisibleIframe(parentId));
+        this._frame = IFrameWindow.createVisibleIframe(parentId);
         this._window = this._frame.contentWindow;
     }
 
@@ -50,7 +48,7 @@ export class IFrameWindow extends AbstractChildWindow {
         iframe.height = "0";
         iframe.setAttribute(
             "sandbox",
-            "allow-scripts allow-same-origin allow-forms"
+            "allow-scripts allow-same-origin allow-forms",
         );
 
         window.document.body.appendChild(iframe);
@@ -68,26 +66,27 @@ export class IFrameWindow extends AbstractChildWindow {
         iframe.height = "100%";
         iframe.setAttribute(
             "sandbox",
-            "allow-scripts allow-same-origin allow-forms"
+            "allow-scripts allow-same-origin allow-forms",
         );
-        if (!parentId) window.document.body.appendChild(iframe);
-        else {
-            window.document.getElementById(parentId)?.appendChild(iframe);
-        }
+        // if (!parentId) window.document.body.appendChild(iframe);
+        // else {
+        //     window.document.getElementById(parentId)?.appendChild(iframe);
+        // }
+        window.document.getElementById("iframeParent")?.appendChild(iframe);
         return iframe;
     }
 
     public async navigate(params: NavigateParams): Promise<NavigateResponse> {
         this._logger.debug(
             "navigate: Using timeout of:",
-            this._timeoutInSeconds
+            this._timeoutInSeconds,
         );
         const timer = setTimeout(
             () =>
                 this._abort.raise(
-                    new ErrorTimeout("IFrame timed out without a response")
+                    new ErrorTimeout("IFrame timed out without a response"),
                 ),
-            this._timeoutInSeconds * 1000
+            this._timeoutInSeconds * 1000,
         );
         this._disposeHandlers.add(() => clearTimeout(timer));
 
@@ -104,7 +103,7 @@ export class IFrameWindow extends AbstractChildWindow {
                         frame.parentNode?.removeChild(frame);
                         this._abort.raise(new Error("IFrame removed from DOM"));
                     },
-                    true
+                    true,
                 );
                 this._frame.contentWindow?.location.replace("about:blank");
             }

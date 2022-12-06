@@ -1,19 +1,43 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>oidc-client test</title>
-        <link rel="stylesheet" href="./app.css">
-    </head>
-    <body>
-        <h3>Local fake authority (proxy 15000)</h3>
-        <ul>
-            <li><a href="./oidc-client/sample.html">OidcClient Sample</a></li>
-            <li><a href="./user-manager/sample.html">UserManager Sample</a></li>
-        </ul>
+  <head>
+    <title>oidc-client test</title>
+    <link rel="stylesheet" href="./app.css" />
+    <script>
+      window.TrinsicSettings = {
+        authority: 'https://localhost:7266/',
+        client_id: 'okie-dokie',
+        redirect_uri: `${window.location.origin}/callback.html`,
+        silent_redirect_uri: `${window.location.origin}/callback.html`,
+        iframeHidden: false,
+        parentElementId: 'iframeParent',
+        popup_redirect_uri: `${window.location.origin}/callback.html`,
+        post_logout_redirect_uri: `${window.location.origin}/`,
+        response_type: 'code',
+        scope: 'openid',
+        prompt: undefined,
+        extraQueryParams: {
+          'trinsic:ecosystem': 'hersh-test',
+          'trinsic:schema':
+            'https://dev-schema.trinsic.cloud/hersh-test/zbettertemplate',
+        },
+      }
+    </script>
+  </head>
+  <body>
+    <h3>Local fake authority (proxy 15000)</h3>
+    <ul>
+      <li><a href="./oidc-client/sample.html">OidcClient Sample</a></li>
+      <li><a href="./user-manager/sample.html">UserManager Sample</a></li>
+    </ul>
 
-        <h3>DuendeSoftware demo</h3>
-        <ul>
-            <li><a href="./code-flow-duendesoftware/sample.html">UserManager Sample with code flow</a></li>
-        </ul>
-    </body>
+    <h3>DuendeSoftware demo</h3>
+    <ul>
+      <li>
+        <a href="./code-flow-duendesoftware/sample.html">
+          UserManager Sample with code flow
+        </a>
+      </li>
+    </ul>
+  </body>
 </html>

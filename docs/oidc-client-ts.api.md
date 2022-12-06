@@ -144,6 +144,10 @@ export interface IdTokenClaims extends Mandatory<OidcStandardClaims, "sub">, Man
 // @public (undocumented)
 export interface IFrameWindowParams {
     // (undocumented)
+    hidden: boolean;
+    // (undocumented)
+    parentId?: string;
+    // (undocumented)
     silentRequestTimeoutInSeconds?: number;
 }
 
@@ -890,7 +894,7 @@ export type UserLoadedCallback = (user: User) => Promise<void> | void;
 
 // @public
 export class UserManager {
-    constructor(settings: UserManagerSettings);
+    constructor();
     // (undocumented)
     protected _buildUser(signinResponse: SigninResponse, verifySub?: string): Promise<User>;
     clearStaleState(): Promise<void>;
@@ -1009,6 +1013,8 @@ export interface UserManagerSettings extends OidcClientSettings {
     accessTokenExpiringNotificationTimeInSeconds?: number;
     automaticSilentRenew?: boolean;
     checkSessionIntervalInSeconds?: number;
+    // (undocumented)
+    iframeHidden?: boolean;
     iframeNotifyParentOrigin?: string;
     iframeScriptOrigin?: string;
     includeIdTokenInSilentRenew?: boolean;
@@ -1016,6 +1022,8 @@ export interface UserManagerSettings extends OidcClientSettings {
     // (undocumented)
     monitorAnonymousSession?: boolean;
     monitorSession?: boolean;
+    // (undocumented)
+    parentElementId?: string;
     // (undocumented)
     popup_post_logout_redirect_uri?: string;
     popup_redirect_uri?: string;
@@ -1045,6 +1053,8 @@ export class UserManagerSettingsStore extends OidcClientSettingsStore {
     // (undocumented)
     readonly checkSessionIntervalInSeconds: number;
     // (undocumented)
+    readonly iframeHidden?: boolean;
+    // (undocumented)
     readonly iframeNotifyParentOrigin: string | undefined;
     // (undocumented)
     readonly iframeScriptOrigin: string | undefined;
@@ -1056,6 +1066,8 @@ export class UserManagerSettingsStore extends OidcClientSettingsStore {
     readonly monitorAnonymousSession: boolean;
     // (undocumented)
     readonly monitorSession: boolean;
+    // (undocumented)
+    readonly parentElementId?: string;
     // (undocumented)
     readonly popup_post_logout_redirect_uri: string | undefined;
     // (undocumented)

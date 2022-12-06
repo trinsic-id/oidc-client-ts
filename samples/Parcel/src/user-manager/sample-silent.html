@@ -1,13 +1,30 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>user-manager test</title>
-    <link rel="stylesheet" href="../app.css">
-</head>
+    <link rel="stylesheet" href="../app.css" />
+    <script>
+      window.OIDCSettings = {
+        authority: 'https://localhost:7266/',
+        client_id: `${window.location.origin}`,
+        redirect_uri: `${window.location.origin}/user-manager/callback.html`,
+        silent_redirect_uri: `${window.location.origin}/user-manager/sample-silent.html`,
+        silentRequestTimeoutInSeconds: 600,
+        popup_redirect_uri: `${window.location.origin}/user-manager/callback.html`,
+        post_logout_redirect_uri: `${window.location.origin}/user-manager/`,
+        response_type: 'code',
+        scope: 'openid',
+        prompt: undefined,
+        extraQueryParams: {
+          'trinsic:ecosystem': 'hersh-test',
+          'trinsic:schema':
+            'https://dev-schema.trinsic.cloud/hersh-test/zbettertemplate',
+        },
+      }
+    </script>
+  </head>
 
-<body>
-    <script type="module" src="./sample-silent.js"></script>
-</body>
-
+  <body>
+    <script defer type="module" src="./sample-silent.js"></script>
+  </body>
 </html>
