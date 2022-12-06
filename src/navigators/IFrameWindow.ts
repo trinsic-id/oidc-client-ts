@@ -12,6 +12,8 @@ import { DefaultSilentRequestTimeoutInSeconds } from "../UserManagerSettings";
  */
 export interface IFrameWindowParams {
     silentRequestTimeoutInSeconds?: number;
+    hidden: boolean;
+    parentId?: string;
 }
 
 /**
@@ -24,11 +26,15 @@ export class IFrameWindow extends AbstractChildWindow {
 
     public constructor({
         silentRequestTimeoutInSeconds = DefaultSilentRequestTimeoutInSeconds,
+        hidden = false,
+        parentId,
     }: IFrameWindowParams) {
         super();
         this._timeoutInSeconds = silentRequestTimeoutInSeconds;
 
-        this._frame = IFrameWindow.createHiddenIframe();
+        hidden
+            ? (this._frame = IFrameWindow.createHiddenIframe())
+            : (this._frame = IFrameWindow.createVisibleIframe(parentId));
         this._window = this._frame.contentWindow;
     }
 
@@ -42,15 +48,47 @@ export class IFrameWindow extends AbstractChildWindow {
         iframe.style.top = "0";
         iframe.width = "0";
         iframe.height = "0";
-        iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms");
+        iframe.setAttribute(
+            "sandbox",
+            "allow-scripts allow-same-origin allow-forms"
+        );
 
         window.document.body.appendChild(iframe);
         return iframe;
     }
 
+    private static createVisibleIframe(parentId?: string): HTMLIFrameElement {
+        const iframe = window.document.createElement("iframe");
+
+        // shotgun approach
+        iframe.style.position = "absolute";
+        iframe.style.left = "0";
+        iframe.style.top = "0";
+        iframe.width = "100%";
+        iframe.height = "100%";
+        iframe.setAttribute(
+            "sandbox",
+            "allow-scripts allow-same-origin allow-forms"
+        );
+        if (!parentId) window.document.body.appendChild(iframe);
+        else {
+            window.document.getElementById(parentId)?.appendChild(iframe);
+        }
+        return iframe;
+    }
+
     public async navigate(params: NavigateParams): Promise<NavigateResponse> {
-        this._logger.debug("navigate: Using timeout of:", this._timeoutInSeconds);
-        const timer = setTimeout(() => this._abort.raise(new ErrorTimeout("IFrame timed out without a response")), this._timeoutInSeconds * 1000);
+        this._logger.debug(
+            "navigate: Using timeout of:",
+            this._timeoutInSeconds
+        );
+        const timer = setTimeout(
+            () =>
+                this._abort.raise(
+                    new ErrorTimeout("IFrame timed out without a response")
+                ),
+            this._timeoutInSeconds * 1000
+        );
         this._disposeHandlers.add(() => clearTimeout(timer));
 
         return await super.navigate(params);
@@ -59,11 +97,15 @@ export class IFrameWindow extends AbstractChildWindow {
     public close(): void {
         if (this._frame) {
             if (this._frame.parentNode) {
-                this._frame.addEventListener("load", (ev) => {
-                    const frame = ev.target as HTMLIFrameElement;
-                    frame.parentNode?.removeChild(frame);
-                    this._abort.raise(new Error("IFrame removed from DOM"));
-                }, true);
+                this._frame.addEventListener(
+                    "load",
+                    (ev) => {
+                        const frame = ev.target as HTMLIFrameElement;
+                        frame.parentNode?.removeChild(frame);
+                        this._abort.raise(new Error("IFrame removed from DOM"));
+                    },
+                    true
+                );
                 this._frame.contentWindow?.location.replace("about:blank");
             }
             this._frame = null;

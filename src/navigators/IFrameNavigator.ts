@@ -15,9 +15,16 @@ export class IFrameNavigator implements INavigator {
     constructor(private _settings: UserManagerSettingsStore) {}
 
     public async prepare({
-        silentRequestTimeoutInSeconds = this._settings.silentRequestTimeoutInSeconds,
+        silentRequestTimeoutInSeconds = this._settings
+            .silentRequestTimeoutInSeconds,
+        hidden = this._settings.iframeHidden!!,
+        parentId = this._settings.parentElementId,
     }: IFrameWindowParams): Promise<IFrameWindow> {
-        return new IFrameWindow({ silentRequestTimeoutInSeconds });
+        return new IFrameWindow({
+            silentRequestTimeoutInSeconds,
+            hidden,
+            parentId,
+        });
     }
 
     public async callback(url: string): Promise<void> {
