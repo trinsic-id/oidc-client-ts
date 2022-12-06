@@ -27,7 +27,7 @@ export class IFrameWindow extends AbstractChildWindow {
     public constructor({
         silentRequestTimeoutInSeconds = DefaultSilentRequestTimeoutInSeconds,
         hidden = false,
-        parentId,
+        parentId = "iframe-parent",
     }: IFrameWindowParams) {
         super();
         this._timeoutInSeconds = silentRequestTimeoutInSeconds;
@@ -55,7 +55,7 @@ export class IFrameWindow extends AbstractChildWindow {
         return iframe;
     }
 
-    private static createVisibleIframe(parentId?: string): HTMLIFrameElement {
+    private static createVisibleIframe(parentId: string): HTMLIFrameElement {
         const iframe = window.document.createElement("iframe");
 
         // shotgun approach
@@ -72,7 +72,7 @@ export class IFrameWindow extends AbstractChildWindow {
         // else {
         //     window.document.getElementById(parentId)?.appendChild(iframe);
         // }
-        window.document.getElementById("iframeParent")?.appendChild(iframe);
+        window.document.getElementById(parentId)?.appendChild(iframe);
         return iframe;
     }
 
