@@ -1,12 +1,12 @@
 {
-  "name": "oidc-client-ts",
-  "version": "2.2.0",
-  "description": "OpenID Connect (OIDC) & OAuth2 client library",
+  "name": "trinsic-oidc-client-ts",
+  "version": "0.0.1",
+  "description": "Trinsic OpenID Connect (OIDC) & OAuth2 client library",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com:authts/oidc-client-ts.git"
+    "url": "git+https://github.com/trinsic-id/oidc-client-ts.git"
   },
-  "homepage": "https://github.com/authts/oidc-client-ts#readme",
+  "homepage": "https://github.com/trinsic-id/oidc-client-ts#readme",
   "license": "Apache-2.0",
   "main": "dist/umd/oidc-client-ts.js",
   "types": "dist/types/oidc-client-ts.d.ts",
@@ -26,11 +26,12 @@
     "oauth2",
     "oidc",
     "openid",
-    "OpenID Connect"
+    "OpenID Connect",
+    "Trinsic"
   ],
   "scripts": {
     "build": "node scripts/build.js && npm run build-types",
-    "build-types": "tsc -p tsconfig.build.json && api-extractor run",
+    "build-types": "tsc -p tsconfig.build.json",
     "clean": "git clean -fdX dist lib *.tsbuildinfo",
     "prepack": "npm run build",
     "test": "tsc && jest",
