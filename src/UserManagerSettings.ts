@@ -1,7 +1,10 @@
 // Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-import { OidcClientSettings, OidcClientSettingsStore } from "./OidcClientSettings";
+import {
+    OidcClientSettings,
+    OidcClientSettingsStore,
+} from "./OidcClientSettings";
 import type { PopupWindowFeatures } from "./utils/PopupUtils";
 import { WebStorageStateStore } from "./WebStorageStateStore";
 import { InMemoryWebStorage } from "./InMemoryWebStorage";
@@ -48,6 +51,10 @@ export interface UserManagerSettings extends OidcClientSettings {
     silent_redirect_uri?: string;
     /** Number of seconds to wait for the silent renew to return before assuming it has failed or timed out (default: 10) */
     silentRequestTimeoutInSeconds?: number;
+    // Whether the iFrame is hidden
+    iframeHidden?: boolean;
+    // Id of parent element to render iFrame into
+    parentElementId?: string;
     /** Flag to indicate if there should be an automatic attempt to renew the access token prior to its expiration (default: true) */
     automaticSilentRenew?: boolean;
     /** Flag to validate user.profile.sub in silent renew calls (default: true) */
@@ -103,6 +110,8 @@ export class UserManagerSettingsStore extends OidcClientSettingsStore {
 
     public readonly silent_redirect_uri: string;
     public readonly silentRequestTimeoutInSeconds: number;
+    public readonly iframeHidden?: boolean;
+    public readonly parentElementId?: string;
     public readonly automaticSilentRenew: boolean;
     public readonly validateSubOnSilentRenew: boolean;
     public readonly includeIdTokenInSilentRenew: boolean;
@@ -135,6 +144,8 @@ export class UserManagerSettingsStore extends OidcClientSettingsStore {
 
             silent_redirect_uri = args.redirect_uri,
             silentRequestTimeoutInSeconds = DefaultSilentRequestTimeoutInSeconds,
+            iframeHidden = false,
+            parentElementId = undefined,
             automaticSilentRenew = true,
             validateSubOnSilentRenew = true,
             includeIdTokenInSilentRenew = false,
@@ -168,6 +179,8 @@ export class UserManagerSettingsStore extends OidcClientSettingsStore {
 
         this.silent_redirect_uri = silent_redirect_uri;
         this.silentRequestTimeoutInSeconds = silentRequestTimeoutInSeconds;
+        this.parentElementId = parentElementId;
+        this.iframeHidden = iframeHidden;
         this.automaticSilentRenew = automaticSilentRenew;
         this.validateSubOnSilentRenew = validateSubOnSilentRenew;
         this.includeIdTokenInSilentRenew = includeIdTokenInSilentRenew;
@@ -182,13 +195,16 @@ export class UserManagerSettingsStore extends OidcClientSettingsStore {
         this.revokeTokensOnSignout = revokeTokensOnSignout;
         this.includeIdTokenInSilentSignout = includeIdTokenInSilentSignout;
 
-        this.accessTokenExpiringNotificationTimeInSeconds = accessTokenExpiringNotificationTimeInSeconds;
+        this.accessTokenExpiringNotificationTimeInSeconds =
+            accessTokenExpiringNotificationTimeInSeconds;
 
         if (userStore) {
             this.userStore = userStore;
-        }
-        else {
-            const store = typeof window !== "undefined" ? window.sessionStorage : new InMemoryWebStorage();
+        } else {
+            const store =
+                typeof window !== "undefined"
+                    ? window.sessionStorage
+                    : new InMemoryWebStorage();
             this.userStore = new WebStorageStateStore({ store });
         }
     }
