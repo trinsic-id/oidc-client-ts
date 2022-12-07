@@ -32,6 +32,7 @@ import type { SignoutResponse } from "./SignoutResponse";
 import type { MetadataService } from "./MetadataService";
 import { RefreshState } from "./RefreshState";
 import type { SigninResponse } from "./SigninResponse";
+import MicroModal from "micromodal";
 
 /**
  * @public
@@ -346,6 +347,7 @@ export class UserManager {
             handle,
             verifySub,
         );
+        MicroModal.close("iframe-modal");
         if (user) {
             if (user.profile?.sub) {
                 logger.info("success, signed in subject", user.profile.sub);
