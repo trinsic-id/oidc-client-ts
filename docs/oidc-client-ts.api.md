@@ -1023,8 +1023,6 @@ export interface UserManagerSettings extends OidcClientSettings {
     monitorAnonymousSession?: boolean;
     monitorSession?: boolean;
     // (undocumented)
-    parentElementId?: string;
-    // (undocumented)
     popup_post_logout_redirect_uri?: string;
     popup_redirect_uri?: string;
     popupWindowFeatures?: PopupWindowFeatures;

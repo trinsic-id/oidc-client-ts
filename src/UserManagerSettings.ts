@@ -53,8 +53,6 @@ export interface UserManagerSettings extends OidcClientSettings {
     silentRequestTimeoutInSeconds?: number;
     // Whether the iFrame is hidden
     iframeHidden?: boolean;
-    // Id of parent element to render iFrame into
-    parentElementId?: string;
     /** Flag to indicate if there should be an automatic attempt to renew the access token prior to its expiration (default: true) */
     automaticSilentRenew?: boolean;
     /** Flag to validate user.profile.sub in silent renew calls (default: true) */
@@ -146,7 +144,6 @@ export class UserManagerSettingsStore extends OidcClientSettingsStore {
             silent_redirect_uri = args.redirect_uri,
             silentRequestTimeoutInSeconds = DefaultSilentRequestTimeoutInSeconds,
             iframeHidden = args.iframeHidden,
-            parentElementId = args.parentElementId,
             automaticSilentRenew = true,
             validateSubOnSilentRenew = true,
             includeIdTokenInSilentRenew = false,
@@ -180,7 +177,6 @@ export class UserManagerSettingsStore extends OidcClientSettingsStore {
 
         this.silent_redirect_uri = silent_redirect_uri;
         this.silentRequestTimeoutInSeconds = silentRequestTimeoutInSeconds;
-        this.parentElementId = parentElementId;
         this.iframeHidden = iframeHidden;
         this.automaticSilentRenew = automaticSilentRenew;
         this.validateSubOnSilentRenew = validateSubOnSilentRenew;

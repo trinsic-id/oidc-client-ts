@@ -6,7 +6,8 @@ import { ErrorTimeout } from "../errors";
 import type { NavigateParams, NavigateResponse } from "./IWindow";
 import { AbstractChildWindow } from "./AbstractChildWindow";
 import { DefaultSilentRequestTimeoutInSeconds } from "../UserManagerSettings";
-
+import MicroModal from "micromodal";
+MicroModal.init();
 /**
  * @public
  */
@@ -27,12 +28,11 @@ export class IFrameWindow extends AbstractChildWindow {
     public constructor({
         silentRequestTimeoutInSeconds = DefaultSilentRequestTimeoutInSeconds,
         hidden = false,
-        parentId = "iframe-parent",
     }: IFrameWindowParams) {
         super();
         this._timeoutInSeconds = silentRequestTimeoutInSeconds;
 
-        this._frame = IFrameWindow.createVisibleIframe(parentId);
+        this._frame = IFrameWindow.createVisibleIframe();
         this._window = this._frame.contentWindow;
     }
 
@@ -55,7 +55,7 @@ export class IFrameWindow extends AbstractChildWindow {
         return iframe;
     }
 
-    private static createVisibleIframe(parentId: string): HTMLIFrameElement {
+    private static createVisibleIframe(): HTMLIFrameElement {
         const iframe = window.document.createElement("iframe");
 
         // shotgun approach
@@ -68,11 +68,41 @@ export class IFrameWindow extends AbstractChildWindow {
             "sandbox",
             "allow-scripts allow-forms allow-same-origin",
         );
-        // if (!parentId) window.document.body.appendChild(iframe);
-        // else {
-        //     window.document.getElementById(parentId)?.appendChild(iframe);
-        // }
-        window.document.getElementById(parentId)?.appendChild(iframe);
+
+        let iframeParent = window.document.getElementById(
+            "trinsic-iframe-parent",
+        );
+        if (!iframeParent) {
+            const html = `<div class="modal micromodal-slide" id="iframe-modal" aria-hidden="true">
+            <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+              <div
+                class="modal__container"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modal-1-title"
+              >
+                <header class="modal__header">
+                  <h2 class="modal__title" id="modal-1-title">
+                    Trinsic
+                  </h2>
+                  <button
+                    class="modal__close"
+                    aria-label="Close modal"
+                    data-micromodal-close
+                  ></button>
+                </header>
+                <main class="modal__content" id="trinsic-iframe-parent">
+                </main>
+              </div>
+            </div>
+            </div>`;
+            window.document.body.insertAdjacentHTML("beforeend", html);
+        }
+        iframeParent = window.document.getElementById(
+            "trinsic-iframe-parent",
+        ) as HTMLElement;
+        iframeParent.appendChild(iframe);
+        MicroModal.show("iframe-modal");
         return iframe;
     }
 

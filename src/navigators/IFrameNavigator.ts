@@ -17,13 +17,11 @@ export class IFrameNavigator implements INavigator {
     public async prepare({
         silentRequestTimeoutInSeconds = this._settings
             .silentRequestTimeoutInSeconds,
-        hidden = this._settings.iframeHidden!!,
-        parentId = this._settings.parentElementId,
+        hidden = this._settings.iframeHidden!,
     }: IFrameWindowParams): Promise<IFrameWindow> {
         return new IFrameWindow({
             silentRequestTimeoutInSeconds,
             hidden,
-            parentId,
         });
     }
 

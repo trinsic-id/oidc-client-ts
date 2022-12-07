@@ -45,13 +45,15 @@
   },
   "dependencies": {
     "crypto-js": "^4.1.1",
-    "jwt-decode": "^3.1.2"
+    "jwt-decode": "^3.1.2",
+    "micromodal": "^0.4.10"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.18.10",
     "@testing-library/jest-dom": "^5.16.5",
     "@types/crypto-js": "^4.0.2",
     "@types/jest": "^29.2.3",
+    "@types/micromodal": "^0.3.3",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
     "esbuild": "^0.15.6",

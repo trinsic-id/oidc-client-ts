@@ -2,7 +2,7 @@
   "name": "parcel-sample",
   "private": true,
   "scripts": {
-    "start": "concurrently --kill-others \"npm run serve\" \"npm run server\"",
+    "start": "rm -rf .parcel-cache && npm run serve",
     "serve": "parcel serve ./src/index.html",
     "build": "parcel build ./src/index.html",
     "server": "node ./server.js"
