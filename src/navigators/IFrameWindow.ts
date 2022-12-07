@@ -81,16 +81,6 @@ export class IFrameWindow extends AbstractChildWindow {
                 aria-modal="true"
                 aria-labelledby="modal-1-title"
               >
-                <header class="modal__header">
-                  <h2 class="modal__title" id="modal-1-title">
-                    Trinsic
-                  </h2>
-                  <button
-                    class="modal__close"
-                    aria-label="Close modal"
-                    data-micromodal-close
-                  ></button>
-                </header>
                 <main class="modal__content" id="trinsic-iframe-parent">
                 </main>
               </div>
