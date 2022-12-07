@@ -46,10 +46,7 @@ export class IFrameWindow extends AbstractChildWindow {
         iframe.style.top = "0";
         iframe.width = "0";
         iframe.height = "0";
-        iframe.setAttribute(
-            "sandbox",
-            "allow-scripts allow-same-origin allow-forms",
-        );
+        iframe.setAttribute("sandbox", "allow-scripts allow-forms");
 
         window.document.body.appendChild(iframe);
         return iframe;
@@ -64,10 +61,7 @@ export class IFrameWindow extends AbstractChildWindow {
         iframe.style.top = "0";
         iframe.width = "100%";
         iframe.height = "100%";
-        iframe.setAttribute(
-            "sandbox",
-            "allow-scripts allow-same-origin allow-forms",
-        );
+        iframe.setAttribute("sandbox", "allow-scripts allow-forms");
         // if (!parentId) window.document.body.appendChild(iframe);
         // else {
         //     window.document.getElementById(parentId)?.appendChild(iframe);

@@ -1,6 +1,6 @@
 {
   "name": "trinsic-oidc-client-ts",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Trinsic OpenID Connect (OIDC) & OAuth2 client library",
   "repository": {
     "type": "git",
@@ -27,7 +27,11 @@
     "oidc",
     "openid",
     "OpenID Connect",
-    "Trinsic"
+    "Trinsic",
+    "Self-Sovereign Identity",
+    "SSI",
+    "Verifiable Credentials",
+    "BBS+"
   ],
   "scripts": {
     "build": "node scripts/build.js && npm run build-types",
