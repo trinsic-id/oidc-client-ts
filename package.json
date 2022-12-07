@@ -1,6 +1,6 @@
 {
   "name": "trinsic-oidc-client-ts",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Trinsic OpenID Connect (OIDC) & OAuth2 client library",
   "repository": {
     "type": "git",
