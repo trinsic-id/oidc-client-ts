@@ -104,7 +104,7 @@ export type SignoutSilentArgs = IFrameWindowParams & ExtraSignoutRequestArgs;
 
 declare global {
     interface Window {
-        OIDCSettings: UserManagerSettings;
+        OIDCSettings?: UserManagerSettings;
     }
 }
 
@@ -127,10 +127,14 @@ export class UserManager {
     protected readonly _silentRenewService: SilentRenewService;
     protected readonly _sessionMonitor: SessionMonitor | null;
 
-    public constructor() {
-        this.settings = new UserManagerSettingsStore(window.OIDCSettings);
+    public constructor(providedSettings?: UserManagerSettings) {
+        const settings =
+            providedSettings ??
+            window.OIDCSettings ??
+            ({} as UserManagerSettings);
+        this.settings = new UserManagerSettingsStore(settings);
 
-        this._client = new OidcClient(window.OIDCSettings);
+        this._client = new OidcClient(settings);
 
         this._redirectNavigator = new RedirectNavigator(this.settings);
         this._popupNavigator = new PopupNavigator(this.settings);
