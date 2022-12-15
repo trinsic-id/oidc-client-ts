@@ -48,7 +48,7 @@ export class IFrameWindow extends AbstractChildWindow {
         iframe.height = "0";
         iframe.setAttribute(
             "sandbox",
-            "allow-scripts allow-forms allow-same-origin",
+            "allow-forms allow-storage-access-by-user-activation allow-scripts allow-same-origin",
         );
 
         window.document.body.appendChild(iframe);
@@ -66,7 +66,7 @@ export class IFrameWindow extends AbstractChildWindow {
         iframe.height = "100%";
         iframe.setAttribute(
             "sandbox",
-            "allow-scripts allow-forms allow-same-origin",
+            "allow-forms allow-storage-access-by-user-activation allow-scripts allow-same-origin",
         );
 
         let iframeParent = window.document.getElementById(
