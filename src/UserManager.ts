@@ -33,6 +33,7 @@ import type { MetadataService } from "./MetadataService";
 import { RefreshState } from "./RefreshState";
 import type { SigninResponse } from "./SigninResponse";
 import MicroModal from "micromodal";
+import { SignInMode, getExtraQueryParameters } from "./utils/TrinsicUtils";
 
 /**
  * @public
@@ -199,10 +200,17 @@ export class UserManager {
         const handle = await this._redirectNavigator.prepare({
             redirectMethod,
         });
+
+        const extraQueryParams = getExtraQueryParameters(
+            SignInMode.REDIRECT,
+            requestArgs.extraQueryParams,
+        );
+
         await this._signinStart(
             {
                 request_type: "si:r",
                 ...requestArgs,
+                ...extraQueryParams,
             },
             handle,
         );
@@ -269,12 +277,19 @@ export class UserManager {
             popupWindowFeatures,
             popupWindowTarget,
         });
+
+        const extraQueryParams = getExtraQueryParameters(
+            SignInMode.POPUP,
+            requestArgs.extraQueryParams,
+        );
+
         const user = await this._signin(
             {
                 request_type: "si:p",
                 redirect_uri: url,
                 display: "popup",
                 ...requestArgs,
+                ...extraQueryParams,
             },
             handle,
         );
@@ -338,6 +353,12 @@ export class UserManager {
             hidden,
             parentId,
         });
+
+        const extraQueryParams = getExtraQueryParameters(
+            SignInMode.SILENT,
+            requestArgs.extraQueryParams,
+        );
+
         user = await this._signin(
             {
                 request_type: "si:s",
@@ -347,6 +368,7 @@ export class UserManager {
                     ? user?.id_token
                     : undefined,
                 ...requestArgs,
+                ...extraQueryParams,
             },
             handle,
             verifySub,
@@ -450,6 +472,7 @@ export class UserManager {
             hidden,
             parentId,
         });
+
         const navResponse = await this._signinStart(
             {
                 request_type: "si:s", // this acts like a signin silent
