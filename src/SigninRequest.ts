@@ -25,7 +25,7 @@ export interface SigninRequestArgs {
     login_hint?: string;
     acr_values?: string;
     resource?: string;
-    response_mode?: "query" | "fragment" ;
+    response_mode?: "query" | "fragment";
     request?: string;
     request_uri?: string;
     extraQueryParams?: Record<string, string | number | boolean>;
@@ -33,7 +33,7 @@ export interface SigninRequestArgs {
     client_secret?: string;
     extraTokenParams?: Record<string, unknown>;
     skipUserInfo?: boolean;
-    nonce?: string; 
+    nonce?: string;
 
     /** custom "state", which can be used by a caller to have "data" round tripped */
     state_data?: unknown;
@@ -50,14 +50,24 @@ export class SigninRequest {
 
     public constructor({
         // mandatory
-        url, authority, client_id, redirect_uri, response_type, scope,
+        url,
+        authority,
+        client_id,
+        redirect_uri,
+        response_type,
+        scope,
         // optional
-        state_data, response_mode, request_type, client_secret, nonce,
+        state_data,
+        response_mode,
+        request_type,
+        client_secret,
+        nonce,
         skipUserInfo,
         extraQueryParams,
         extraTokenParams,
         ...optionalParams
     }: SigninRequestArgs) {
+        console.log("REDIRECT URI", redirect_uri);
         if (!url) {
             this._logger.error("ctor: No url passed");
             throw new Error("url");
@@ -87,9 +97,13 @@ export class SigninRequest {
             data: state_data,
             request_type,
             code_verifier: true,
-            client_id, authority, redirect_uri,
+            client_id,
+            authority,
+            redirect_uri,
             response_mode,
-            client_secret, scope, extraTokenParams,
+            client_secret,
+            scope,
+            extraTokenParams,
             skipUserInfo,
         });
 
@@ -104,11 +118,18 @@ export class SigninRequest {
 
         parsedUrl.searchParams.append("state", this.state.id);
         if (this.state.code_challenge) {
-            parsedUrl.searchParams.append("code_challenge", this.state.code_challenge);
+            parsedUrl.searchParams.append(
+                "code_challenge",
+                this.state.code_challenge,
+            );
             parsedUrl.searchParams.append("code_challenge_method", "S256");
         }
 
-        for (const [key, value] of Object.entries({ response_mode, ...optionalParams, ...extraQueryParams })) {
+        for (const [key, value] of Object.entries({
+            response_mode,
+            ...optionalParams,
+            ...extraQueryParams,
+        })) {
             if (value != null) {
                 parsedUrl.searchParams.append(key, value.toString());
             }
