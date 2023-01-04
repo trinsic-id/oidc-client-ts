@@ -282,7 +282,7 @@ export class UserManager {
         const user = await this._signin(
             {
                 request_type: "si:p",
-                redirect_uri: "",
+                redirect_uri: " ",
                 display: "popup",
                 ...requestArgs,
                 ...extraQueryParams,
@@ -353,7 +353,7 @@ export class UserManager {
         user = await this._signin(
             {
                 request_type: "si:s",
-                redirect_uri: "",
+                redirect_uri: " ",
                 display: "popup",
                 id_token_hint: this.settings.includeIdTokenInSilentRenew
                     ? user?.id_token

@@ -67,7 +67,6 @@ export class SigninRequest {
         extraTokenParams,
         ...optionalParams
     }: SigninRequestArgs) {
-        console.log("REDIRECT URI", redirect_uri);
         if (!url) {
             this._logger.error("ctor: No url passed");
             throw new Error("url");
