@@ -268,10 +268,6 @@ export class UserManager {
     public async signinPopup(args: SigninPopupArgs = {}): Promise<User> {
         const logger = this._logger.create("signinPopup");
         const { popupWindowFeatures, popupWindowTarget, ...requestArgs } = args;
-        const url = this.settings.popup_redirect_uri;
-        if (!url) {
-            logger.throw(new Error("No popup_redirect_uri configured"));
-        }
 
         const handle = await this._popupNavigator.prepare({
             popupWindowFeatures,
@@ -286,7 +282,6 @@ export class UserManager {
         const user = await this._signin(
             {
                 request_type: "si:p",
-                redirect_uri: url,
                 display: "popup",
                 ...requestArgs,
                 ...extraQueryParams,
@@ -337,11 +332,6 @@ export class UserManager {
             return await this._useRefreshToken(state);
         }
 
-        const url = this.settings.silent_redirect_uri;
-        if (!url) {
-            logger.throw(new Error("No silent_redirect_uri configured"));
-        }
-
         let verifySub: string | undefined;
         if (user && this.settings.validateSubOnSilentRenew) {
             logger.debug("subject prior to silent renew:", user.profile.sub);
@@ -362,7 +352,6 @@ export class UserManager {
         user = await this._signin(
             {
                 request_type: "si:s",
-                redirect_uri: url,
                 display: "popup",
                 id_token_hint: this.settings.includeIdTokenInSilentRenew
                     ? user?.id_token
