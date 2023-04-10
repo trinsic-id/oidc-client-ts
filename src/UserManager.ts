@@ -205,12 +205,7 @@ export class UserManager {
             SignInMode.REDIRECT,
             requestArgs.extraQueryParams,
         );
-        const params = {
-            request_type: "si:r",
-            ...requestArgs,
-            ...extraQueryParams,
-        };
-        console.log("signinRedirect", params);
+
         await this._signinStart(
             {
                 request_type: "si:r",
