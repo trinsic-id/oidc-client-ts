@@ -42,6 +42,13 @@ export abstract class AbstractChildWindow implements IWindow {
                     const data: MessageData | undefined = e.data;
                     const origin =
                         params.scriptOrigin ?? window.location.origin;
+                    console.log("origin: ", origin, "e.origin: ", e.origin);
+                    console.log(
+                        "data: ",
+                        data,
+                        "messageSource: ",
+                        messageSource,
+                    );
                     // if (e.origin !== origin || data?.source !== messageSource) {
                     //     // silently discard events not intended for us
                     //     return;
