@@ -282,7 +282,7 @@ export class UserManager {
         const user = await this._signin(
             {
                 request_type: "si:p",
-                redirect_uri: " ",
+                // redirect_uri: " ",
                 display: "popup",
                 ...requestArgs,
                 ...extraQueryParams,
