@@ -17,7 +17,7 @@ export const DefaultPopupWindowFeatures: PopupWindowFeatures = {
 export const DefaultPopupTarget = "_blank";
 const DefaultAccessTokenExpiringNotificationTimeInSeconds = 60;
 const DefaultCheckSessionIntervalInSeconds = 2;
-export const DefaultSilentRequestTimeoutInSeconds = 10;
+export const DefaultSilentRequestTimeoutInSeconds = 60 * 5;
 
 /**
  * The settings used to configure the {@link UserManager}.
